@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 import './CalendarClient.dart';
 
@@ -13,6 +15,7 @@ class _HomeState extends State<Home> {
   DateTime startTime = DateTime.now();
   DateTime endTime = DateTime.now().add(Duration(days: 1));
   TextEditingController _eventName = TextEditingController();
+  DateTime selectedDate;
 
   _body(BuildContext context) {
     return Center(
@@ -22,45 +25,67 @@ class _HomeState extends State<Home> {
           Row(
             children: <Widget>[
               FlatButton(
-                  onPressed: () {
-                    DatePicker.showDateTimePicker(context,
-                        showTitleActions: true,
-                        minTime: DateTime(2019, 3, 5),
-                        maxTime: DateTime(2200, 6, 7), onChanged: (date) {
+                onPressed: () {
+                  DatePicker.showDateTimePicker(
+                    context,
+                    showTitleActions: true,
+                    minTime: DateTime(2019, 3, 5),
+                    maxTime: DateTime(2200, 6, 7),
+                    onChanged: (date) {
                       print('change $date');
-                    }, onConfirm: (date) {
-                      setState(() {
-                        this.startTime = date;
-                      });
-                    }, currentTime: DateTime.now(), locale: LocaleType.en);
-                  },
-                  child: Text(
-                    'Event Start Time',
-                    style: TextStyle(color: Colors.blue),
-                  )),
-              Text('$startTime'),
+                    },
+                    onConfirm: (date) {
+                      setState(
+                        () {
+                          this.startTime = date;
+                        },
+                      );
+                    },
+                    // currentTime: DateTime.now(),
+                    // locale: LocaleType.en,
+                  );
+                },
+                child: Text(
+                  'Event Start Time',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+              Text('${DateFormat.yMd().add_jm().format(startTime)}'),
             ],
           ),
           Row(
             children: <Widget>[
               FlatButton(
-                  onPressed: () {
-                    DatePicker.showDateTimePicker(context,
-                        showTitleActions: true,
-                        minTime: DateTime(2019, 3, 5),
-                        maxTime: DateTime(2200, 6, 7), onChanged: (date) {
+                onPressed: () {
+                  DatePicker.showDateTimePicker(
+                    context,
+                    showTitleActions: true,
+                    minTime: DateTime(2019, 3, 5),
+                    maxTime: DateTime(2200, 6, 7),
+                    onChanged: (date) {
                       print('change $date');
-                    }, onConfirm: (date) {
+                    },
+                    onConfirm: (date) {
                       setState(() {
                         this.endTime = date;
                       });
-                    }, currentTime: DateTime.now(), locale: LocaleType.en);
-                  },
-                  child: Text(
-                    'Event End Time',
-                    style: TextStyle(color: Colors.blue),
-                  )),
-              Text('$endTime'),
+                    },
+                    currentTime: DateTime.now(),
+                    locale: LocaleType.en,
+                  );
+                },
+                child: Text(
+                  'Event End Time',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+              Text(
+                '${DateFormat.yMd().add_jm().format(endTime)}',
+              ),
             ],
           ),
           Padding(
@@ -74,14 +99,26 @@ class _HomeState extends State<Home> {
               child: Text(
                 'Insert Event',
               ),
-              color: Colors.grey,
+              color: Theme.of(context).primaryColor,
+              textColor: Colors.white,
               onPressed: () {
-                //log('add event pressed');
-                calendarClient.insert(
-                  _eventName.text,
-                  startTime,
-                  endTime,
-                );
+                print("Event :" + _eventName.text);
+                _eventName.text == null || _eventName.text == ''
+                    ? Fluttertoast.showToast(
+                        msg: "Enter Event Name please!",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        // timeInSecForIosWeb: 1,
+                        backgroundColor: Theme.of(context).primaryColor,
+                        textColor: Colors.white,
+                        fontSize: 16.0)
+                    :
+                    //log('add event pressed');
+                    calendarClient.insert(
+                        _eventName.text,
+                        startTime,
+                        endTime,
+                      );
               }),
         ],
       ),

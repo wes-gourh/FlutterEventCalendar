@@ -20,11 +20,11 @@ class CalendarClient {
 
       EventDateTime start = new EventDateTime();
       start.dateTime = startTime;
-      start.timeZone = "GMT+05:00";
+      start.timeZone = "GMT+05:30";
       event.start = start;
 
       EventDateTime end = new EventDateTime();
-      end.timeZone = "GMT+05:00";
+      end.timeZone = "GMT+05:30";
       end.dateTime = endTime;
       event.end = end;
 
